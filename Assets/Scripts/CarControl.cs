@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CarControl : MonoBehaviour
 {
@@ -9,6 +10,11 @@ public class CarControl : MonoBehaviour
     public float steeringRange = 30f;
     public float steeringRangeAtMaxSpeed = 10f;
     public float centreOfGravityOffset = -1f;
+
+    public float jumpPower = 5;
+
+    public BoxCollider groundCheckCollider;
+    private bool grounded = true;
 
     private WheelControl[] wheels;
     private Rigidbody rigidBody;
@@ -21,12 +27,38 @@ public class CarControl : MonoBehaviour
     }
     void OnEnable()
     {
+        carControls.Car.Jump.started += OnJumpStarted;
+
         carControls.Enable();
     }
 
     void OnDisable()
     {
+        carControls.Car.Jump.started -= OnJumpStarted;
+
         carControls.Disable();
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        grounded = true;
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        grounded = false;
+    }
+
+    private void OnJumpStarted(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            if (grounded)
+            {
+            rigidBody = GetComponent<Rigidbody>();
+            rigidBody.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
+            }
+        }
     }
     
     // Start is called before the first frame update

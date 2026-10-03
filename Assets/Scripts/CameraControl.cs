@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    private float sensitivity = 500f;
+    public float sensitivity = 100f;
     private Vector3 target = Vector3.zero;
 
     private CarInputActions carControls;

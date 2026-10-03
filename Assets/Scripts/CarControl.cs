@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +13,7 @@ public class CarControl : MonoBehaviour
     public float centreOfGravityOffset = -1f;
 
     public float jumpPower = 5;
+    public float airControl = 25;
 
     public BoxCollider groundCheckCollider;
     private bool grounded = true;
@@ -48,7 +50,7 @@ public class CarControl : MonoBehaviour
     {
         grounded = false;
     }
-
+    
     private void OnJumpStarted(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -80,6 +82,12 @@ public class CarControl : MonoBehaviour
     {
         // Read the Vector2 input from the new Input System
         Vector2 inputVector = carControls.Car.Movement.ReadValue<Vector2>();
+
+        if (!grounded)
+        {
+            rigidBody.AddTorque(transform.right * inputVector.y * airControl, ForceMode.Acceleration);
+            rigidBody.AddTorque(transform.up * inputVector.x * airControl, ForceMode.Acceleration);
+        }
 
         // Get player input for acceleration and steering
         float vInput = inputVector.y; // Forward/backward input

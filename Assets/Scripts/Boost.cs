@@ -1,14 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 public class Boost : MonoBehaviour
 {
-    private Rigidbody rb;
+    public Rigidbody rb;
     public float boostAmount;
     private bool isShifting = false;
     public ParticleSystem boostParticles;
+    public ParticleSystem boostParticles2;
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        
     }
     void Update()
 {
@@ -23,6 +25,7 @@ public class Boost : MonoBehaviour
             if (!boostParticles.isPlaying)
             {
                 boostParticles.Play(true);
+                boostParticles2.Play(true);
             }
         }
         else
@@ -31,6 +34,7 @@ public class Boost : MonoBehaviour
             if (boostParticles.isPlaying)
             {
                 boostParticles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                boostParticles2.Stop(true, ParticleSystemStopBehavior.StopEmitting);
             }
         }
     }
@@ -41,7 +45,7 @@ public class Boost : MonoBehaviour
         if (isShifting && rb != null)
         {
             
-            rb.AddForce(transform.forward * boostAmount, ForceMode.Force);
+            rb.AddForce(transform.forward * boostAmount, ForceMode.Acceleration);
         }
         
     }
